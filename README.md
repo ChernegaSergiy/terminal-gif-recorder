@@ -132,5 +132,6 @@ terminal-gif-recorder/
     ├── terminal_ui_wizard.py          # Сценарій wizard.gif для terminal-ui
     ├── terminal_ui_login.py           # Сценарій login.gif для terminal-ui
     ├── terminal_ui_menu.py            # Сценарій menu.gif для terminal-ui
+    ├── table_magic_demo.py            # Сценарій інтерактивного режиму для table-magic
     └── scenario_sample.json           # Приклад JSON-конфігурації
 ```
