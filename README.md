@@ -2,6 +2,8 @@
 
 Python toolkit and wrapper for automated creation of high-quality demonstration GIF animations of terminal CLI utilities (for README.md, documentation, or presentations).
 
+![Terminal GIF Recorder Demo](docs/demo/recorder.gif)
+
 ## Terminal Session Recording Challenges
 
 Typical artifacts occur when recording manually or with simple scripts using a terminal emulator:
