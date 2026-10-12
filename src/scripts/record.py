@@ -8,9 +8,9 @@ import argparse
 import sys
 from pathlib import Path
 
-from src.compiler import compile_gif
-from src.scenario import Scenario
-from src.terminal import play_scenario
+from ..compiler import compile_gif
+from ..scenario import Scenario
+from ..terminal import play_scenario
 
 
 def create_parser() -> argparse.ArgumentParser:
