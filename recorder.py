@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Terminal GIF Recorder
-Автоматизований запис термінальних взаємодій у високоякісні GIF через asciinema та agg.
+Automated recording of terminal interactions into high-quality GIFs via asciinema and agg.
 """
 
 from __future__ import annotations
@@ -25,7 +25,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 
 
-# Спеціальні комбінації клавіш та ANSI послідовності
+# Special key combinations and ANSI sequences
 KEY_MAP: Dict[str, bytes] = {
     "enter": b"\r",
     "return": b"\r",
@@ -46,7 +46,7 @@ KEY_MAP: Dict[str, bytes] = {
 
 
 def find_binary(name: str, fallback_paths: Optional[List[str]] = None) -> str:
-    """Знаходить шлях до виконуваного файлу або піднімає FileNotFoundError."""
+    """Find the path to an executable binary or raise FileNotFoundError."""
     found = shutil.which(name)
     if found:
         return found
@@ -56,23 +56,23 @@ def find_binary(name: str, fallback_paths: Optional[List[str]] = None) -> str:
             if os.path.isfile(expanded) and os.access(expanded, os.X_OK):
                 return expanded
     raise FileNotFoundError(
-        f"Утиліту '{name}' не знайдено. Перевірте PATH або встановіть її."
+        f"Utility '{name}' not found. Please check your PATH or install it."
     )
 
 
 def setup_clean_zdotdir() -> Path:
     """
-    Створює тимчасову директорію ZDOTDIR із .zshrc, який підтягує ~/.zshrc користувача,
-    але вимикає зайві символи/артефакти (наприклад, знак '%' на початку рядка).
+    Creates a temporary ZDOTDIR directory with a .zshrc that sources the user's ~/.zshrc,
+    while disabling unwanted characters/artifacts (such as the '%' symbol at line beginnings).
     """
     zdotdir = Path(tempfile.gettempdir()) / "terminal_recorder_zdotdir"
     zdotdir.mkdir(parents=True, exist_ok=True)
     zshrc_file = zdotdir / ".zshrc"
 
     zshrc_content = (
-        "# Тимчасовий профіль для чистого запису анімацій\n"
+        "# Temporary profile for clean terminal recording\n"
         "[[ -f ~/.zshrc ]] && source ~/.zshrc\n\n"
-        "# Прибираємо маркер неповного рядка (%) та зайві службові сигнали\n"
+        "# Suppress partial line mark (%) and extraneous control signals\n"
         'PROMPT_EOL_MARK=""\n'
         "unsetopt PROMPT_SP\n"
         "unsetopt PROMPT_CR\n"
@@ -83,7 +83,7 @@ def setup_clean_zdotdir() -> Path:
 
 
 class Action:
-    """Представляє окрему дію під час емуляції терміналу."""
+    """Represents a single action during terminal emulation."""
 
     def __init__(self, action_type: str, value: Any, delay: float = 0.0):
         self.type = action_type  # 'type', 'key', 'sleep'
@@ -93,8 +93,8 @@ class Action:
 
 class TerminalRecorder:
     """
-    Обгортка для створення покрокових сценаріїв взаємодії з терміналом
-    та їх запису в GIF.
+    Wrapper for creating step-by-step terminal interaction scenarios
+    and recording them to GIF.
     """
 
     def __init__(
@@ -117,7 +117,7 @@ class TerminalRecorder:
         self.actions: List[Action] = []
 
     def sleep(self, seconds: float) -> "TerminalRecorder":
-        """Пауза на задану кількість секунд."""
+        """Pause for a specified number of seconds."""
         self.actions.append(Action("sleep", seconds / self.speed))
         return self
 
@@ -127,7 +127,7 @@ class TerminalRecorder:
         char_delay_min: float = 0.045,
         char_delay_max: float = 0.085,
     ) -> "TerminalRecorder":
-        """Введення тексту з природною людською затримкою між символами."""
+        """Type text with realistic human typing delays between characters."""
         self.actions.append(
             Action(
                 "type",
@@ -138,7 +138,7 @@ class TerminalRecorder:
         return self
 
     def key(self, key_name_or_bytes: Union[str, bytes]) -> "TerminalRecorder":
-        """Натискання спеціальної клавіші або байтової послідовності."""
+        """Press a special key or send a raw byte sequence."""
         if isinstance(key_name_or_bytes, str):
             lower = key_name_or_bytes.lower()
             if lower in KEY_MAP:
@@ -151,42 +151,42 @@ class TerminalRecorder:
         return self
 
     def enter(self, pause_after: float = 0.4) -> "TerminalRecorder":
-        """Натискання Enter з паузою після нього."""
+        """Press Enter with an optional pause afterwards."""
         self.key("enter")
         if pause_after > 0:
             self.sleep(pause_after)
         return self
 
     def space(self, pause_after: float = 0.2) -> "TerminalRecorder":
-        """Натискання Space."""
+        """Press Space."""
         self.key("space")
         if pause_after > 0:
             self.sleep(pause_after)
         return self
 
     def up(self, pause_after: float = 0.2) -> "TerminalRecorder":
-        """Натискання стрілки Вгору."""
+        """Press Up arrow key."""
         self.key("up")
         if pause_after > 0:
             self.sleep(pause_after)
         return self
 
     def down(self, pause_after: float = 0.2) -> "TerminalRecorder":
-        """Натискання стрілки Вниз."""
+        """Press Down arrow key."""
         self.key("down")
         if pause_after > 0:
             self.sleep(pause_after)
         return self
 
     def left(self, pause_after: float = 0.2) -> "TerminalRecorder":
-        """Натискання стрілки Вліво."""
+        """Press Left arrow key."""
         self.key("left")
         if pause_after > 0:
             self.sleep(pause_after)
         return self
 
     def right(self, pause_after: float = 0.2) -> "TerminalRecorder":
-        """Натискання стрілки Вправо."""
+        """Press Right arrow key."""
         self.key("right")
         if pause_after > 0:
             self.sleep(pause_after)
@@ -194,8 +194,8 @@ class TerminalRecorder:
 
     def run_pty_simulation(self) -> None:
         """
-        Запускає внутрішній PTY процес, передає дії та виводить потік у stdout.
-        Використовується як цільова команда для asciinema.
+        Runs the internal PTY process, replays actions, and streams output to stdout.
+        Used as the target command for asciinema.
         """
         env = os.environ.copy()
         env["TERM"] = "xterm-256color"
@@ -208,14 +208,14 @@ class TerminalRecorder:
 
         pid, master_fd = pty.fork()
         if pid == 0:
-            # Нащадок: встановлюємо геометрію вікна
+            # Child process: set terminal window geometry
             winsize = struct.pack("HHHH", self.rows, self.cols, 0, 0)
             fcntl.ioctl(sys.stdin.fileno(), termios.TIOCSWINSZ, winsize)
             os.chdir(str(self.cwd))
             os.execvpe("zsh", ["zsh", "-i"], env)
             sys.exit(0)
 
-        # Батьківський процес: читає вивід терміналу і пише в sys.stdout
+        # Parent process: read terminal output and write to sys.stdout
         stop_event = threading.Event()
 
         def reader():
@@ -234,10 +234,10 @@ class TerminalRecorder:
         t = threading.Thread(target=reader, daemon=True)
         t.start()
 
-        # Початкова пауза для відмальовки промпта
+        # Initial pause to allow prompt rendering
         time.sleep(self.initial_pause)
 
-        # Відтворення дій
+        # Replay actions
         for act in self.actions:
             if act.type == "type":
                 min_d, max_d = act.delay
@@ -249,10 +249,10 @@ class TerminalRecorder:
             elif act.type == "sleep":
                 time.sleep(act.value)
 
-        # Фінальна пауза перед завершенням
+        # Final pause before termination
         time.sleep(self.final_pause)
 
-        # Завершуємо оболонку чисто через SIGHUP без друку команди exit
+        # Terminate shell cleanly via SIGHUP without typing exit
         try:
             os.kill(pid, signal.SIGHUP)
             os.waitpid(pid, 0)
@@ -272,7 +272,7 @@ class TerminalRecorder:
         temp_cast_path: Optional[Union[str, Path]] = None,
     ) -> Path:
         """
-        Записує весь сценарій через asciinema та рендерить у GIF через agg.
+        Records the scenario using asciinema and renders it to GIF using agg.
         """
         output_gif = Path(output_gif_path).resolve()
         output_gif.parent.mkdir(parents=True, exist_ok=True)
@@ -282,7 +282,7 @@ class TerminalRecorder:
         )
         agg_bin = find_binary("agg", ["~/.local/bin/agg", "/usr/local/bin/agg"])
 
-        # Зберігаємо тимчасовий скрипт для виклику в asciinema
+        # Save temporary scenario configuration for asciinema runner
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".json", delete=False
         ) as f_scenario:
@@ -304,16 +304,16 @@ class TerminalRecorder:
 
             ret = os.system(rec_cmd)
             if ret != 0:
-                raise RuntimeError(f"asciinema завершився з помилкою (код {ret})")
+                raise RuntimeError(f"asciinema exited with error (code {ret})")
 
-            # Рендеринг через agg
+            # Render GIF via agg
             render_cmd = (
                 f"{shlex.quote(agg_bin)} {shlex.quote(str(cast_file))} {shlex.quote(str(output_gif))} "
                 f"--cols {self.cols} --rows {self.rows} --theme {self.theme}"
             )
             ret = os.system(render_cmd)
             if ret != 0:
-                raise RuntimeError(f"agg завершився з помилкою (код {ret})")
+                raise RuntimeError(f"agg exited with error (code {ret})")
 
             return output_gif
 
@@ -324,7 +324,7 @@ class TerminalRecorder:
                 os.remove(cast_file)
 
     def to_dict(self) -> Dict[str, Any]:
-        """Серіалізація сценарію в словник."""
+        """Serialize scenario to dictionary."""
         serialized_actions = []
         for act in self.actions:
             if act.type == "key":
@@ -355,7 +355,7 @@ class TerminalRecorder:
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "TerminalRecorder":
-        """Десеріалізація сценарію зі словника."""
+        """Deserialize scenario from dictionary."""
         rec = cls(
             cols=data.get("cols", 80),
             rows=data.get("rows", 20),
@@ -381,20 +381,20 @@ class TerminalRecorder:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Утиліта для запису автоматизованих термінальних GIF-анімацій"
+        description="Automated terminal GIF recording utility"
     )
-    parser.add_argument("scenario", nargs="?", help="Шлях до файлу сценарію (.json)")
-    parser.add_argument("-o", "--output", help="Шлях до вихідного GIF-файлу")
-    parser.add_argument("--cols", type=int, default=80, help="Ширина терміналу (стовпчики, за замовчуванням 80)")
-    parser.add_argument("--rows", type=int, default=20, help="Висота терміналу (рядки, за замовчуванням 20)")
-    parser.add_argument("--theme", default="github-dark", help="Колірна тема agg (за замовчуванням github-dark)")
-    parser.add_argument("--cwd", help="Робоча директорія сесії")
+    parser.add_argument("scenario", nargs="?", help="Path to scenario configuration file (.json)")
+    parser.add_argument("-o", "--output", help="Path to output GIF file")
+    parser.add_argument("--cols", type=int, default=80, help="Terminal width in columns (default: 80)")
+    parser.add_argument("--rows", type=int, default=20, help="Terminal height in rows (default: 20)")
+    parser.add_argument("--theme", default="github-dark", help="Color theme for agg (default: github-dark)")
+    parser.add_argument("--cwd", help="Working directory for the session")
     parser.add_argument("--execute-json", help=argparse.SUPPRESS)
 
     args = parser.parse_args()
 
     if args.execute_json:
-        # Внутрішній режим: запуск PTY всередині asciinema
+        # Internal mode: run PTY inside asciinema
         with open(args.execute_json, "r", encoding="utf-8") as f:
             data = json.load(f)
         recorder = TerminalRecorder.from_dict(data)
@@ -403,13 +403,13 @@ def main():
 
     if not args.scenario or not args.output:
         parser.print_help()
-        print("\nПриклад використання:")
+        print("\nUsage example:")
         print("  python3 recorder.py scenario.json -o output.gif")
         return
 
     scenario_path = Path(args.scenario)
     if not scenario_path.exists():
-        print(f"Помилка: файл '{scenario_path}' не знайдено.")
+        print(f"Error: file '{scenario_path}' not found.")
         sys.exit(1)
 
     with open(scenario_path, "r", encoding="utf-8") as f:
@@ -425,9 +425,9 @@ def main():
         data["cwd"] = args.cwd
 
     recorder = TerminalRecorder.from_dict(data)
-    print(f"Запис сценарію '{scenario_path}' у '{args.output}'...")
+    print(f"Recording scenario '{scenario_path}' into '{args.output}'...")
     gif_path = recorder.save_gif(args.output)
-    print(f"GIF успішно створено: {gif_path}")
+    print(f"GIF successfully created: {gif_path}")
 
 
 if __name__ == "__main__":
