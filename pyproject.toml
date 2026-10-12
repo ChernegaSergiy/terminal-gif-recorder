@@ -1,0 +1,38 @@
+[project]
+name = "terminal-gif-recorder"
+version = "0.1.0"
+description = "An automated terminal recording utility in Python for generating clean, artifact-free demo GIFs of interactive CLI applications."
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "LicenseRef-CSSM-Unlimited-2.0" }
+authors = [
+    { name = "ChernegaSergiy" }
+]
+keywords = [
+    "terminal",
+    "recorder",
+    "gif",
+    "asciinema",
+    "cli",
+    "tui",
+    "screencast",
+    "automation",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = []
+
+[project.scripts]
+terminal-gif-recorder = "src.cli:main"
+
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
