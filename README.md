@@ -114,14 +114,24 @@ CLI options:
 
 ```
 terminal-gif-recorder/
++-- src/                       # Modular engine package
+|   +-- __init__.py            # Public package exports
+|   +-- actions.py             # Action definitions and key mappings
+|   +-- cli.py                 # Command-line interface parser
+|   +-- compiler.py            # asciinema and agg GIF compilation
+|   +-- env.py                 # Binary discovery and zsh isolation
+|   +-- scenario.py            # Scenario data model and builder
+|   \-- terminal.py            # Pseudoterminal (PTY) runner
++-- examples/
+|   +-- scenario_sample.json   # Sample JSON configuration
+|   +-- table_magic_demo.py    # Interactive mode scenario for table-magic
+|   +-- terminal_ui_login.py   # Login form scenario for terminal-ui
+|   +-- terminal_ui_menu.py    # Interactive menu scenario for terminal-ui
+|   \-- terminal_ui_wizard.py  # Wizard scenario for terminal-ui
++-- LICENSE                    # Project license
++-- pyproject.toml             # Package configuration
 +-- README.md                  # Documentation
-+-- recorder.py                # Core library and CLI utility
-\-- examples/
-    +-- terminal_ui_wizard.py  # wizard.gif scenario for terminal-ui
-    +-- terminal_ui_login.py   # login.gif scenario for terminal-ui
-    +-- terminal_ui_menu.py    # menu.gif scenario for terminal-ui
-    +-- table_magic_demo.py    # Interactive mode scenario for table-magic
-    \-- scenario_sample.json   # Sample JSON configuration
+\-- recorder.py                # Standalone CLI entry point shim
 ```
 
 ## Contributing
