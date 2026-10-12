@@ -14,7 +14,7 @@ if str(root_dir) not in sys.path:
     sys.path.insert(0, str(root_dir))
 
 from src import Action, KEY_MAP, Scenario, TerminalRecorder, compile_gif, play_scenario
-from src.cli import main
+from src.scripts.record import main
 
 __all__ = [
     "Action",
