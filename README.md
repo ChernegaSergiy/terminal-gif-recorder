@@ -114,12 +114,12 @@ CLI options:
 
 ```
 terminal-gif-recorder/
-+-- README.md                          # Documentation
-+-- recorder.py                        # Core library and CLI utility
++-- README.md                  # Documentation
++-- recorder.py                # Core library and CLI utility
 \-- examples/
-    +-- terminal_ui_wizard.py          # wizard.gif scenario for terminal-ui
-    +-- terminal_ui_login.py           # login.gif scenario for terminal-ui
-    +-- terminal_ui_menu.py            # menu.gif scenario for terminal-ui
-    +-- table_magic_demo.py            # Interactive mode scenario for table-magic
-    \-- scenario_sample.json           # Sample JSON configuration
+    +-- terminal_ui_wizard.py  # wizard.gif scenario for terminal-ui
+    +-- terminal_ui_login.py   # login.gif scenario for terminal-ui
+    +-- terminal_ui_menu.py    # menu.gif scenario for terminal-ui
+    +-- table_magic_demo.py    # Interactive mode scenario for table-magic
+    \-- scenario_sample.json   # Sample JSON configuration
 ```
