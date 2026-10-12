@@ -114,24 +114,29 @@ CLI options:
 
 ```
 terminal-gif-recorder/
-+-- src/                       # Modular engine package
-|   +-- __init__.py            # Public package exports
-|   +-- actions.py             # Action definitions and key mappings
-|   +-- cli.py                 # Command-line interface parser
-|   +-- compiler.py            # asciinema and agg GIF compilation
-|   +-- env.py                 # Binary discovery and zsh isolation
-|   +-- scenario.py            # Scenario data model and builder
-|   \-- terminal.py            # Pseudoterminal (PTY) runner
++-- src/
+|   \-- terminal_gif_recorder/  # Core package
+|       +-- __init__.py         # Public package exports
+|       +-- actions.py          # Action definitions and key mappings
+|       +-- cli.py              # CLI backward compatibility wrapper
+|       +-- compiler.py         # asciinema and agg GIF compilation
+|       +-- env.py              # Binary discovery and zsh isolation
+|       +-- scenario.py         # Scenario data model and builder
+|       +-- terminal.py         # Pseudoterminal (PTY) runner
+|       \-- scripts/            # Executable CLI scripts
+|           +-- __init__.py
+|           \-- record.py       # Main CLI entry point
 +-- examples/
-|   +-- scenario_sample.json   # Sample JSON configuration
-|   +-- table_magic_demo.py    # Interactive mode scenario for table-magic
-|   +-- terminal_ui_login.py   # Login form scenario for terminal-ui
-|   +-- terminal_ui_menu.py    # Interactive menu scenario for terminal-ui
-|   \-- terminal_ui_wizard.py  # Wizard scenario for terminal-ui
-+-- LICENSE                    # Project license
-+-- pyproject.toml             # Package configuration
-+-- README.md                  # Documentation
-\-- recorder.py                # Standalone CLI entry point shim
+|   +-- scenario_sample.json    # Sample JSON configuration
+|   +-- table_magic_demo.py     # Interactive mode scenario for table-magic
+|   +-- terminal_ui_login.py    # Login form scenario for terminal-ui
+|   +-- terminal_ui_menu.py     # Interactive menu scenario for terminal-ui
+|   \-- terminal_ui_wizard.py   # Wizard scenario for terminal-ui
++-- .gitignore                  # Git ignore rules
++-- LICENSE                     # Project license
++-- pyproject.toml              # Package configuration
++-- README.md                   # Documentation
+\-- recorder.py                 # Standalone CLI entry point shim
 ```
 
 ## Contributing
