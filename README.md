@@ -1,3 +1,5 @@
+[![Stand With Ukraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner-direct-single.svg)](https://stand-with-ukraine.pp.ua)
+
 # Terminal GIF Recorder
 
 [![License: CSSM Unlimited License v2.0](https://img.shields.io/pypi/l/terminal-gif-recorder)](LICENSE)
