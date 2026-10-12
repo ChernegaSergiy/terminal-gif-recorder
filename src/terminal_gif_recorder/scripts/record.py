@@ -19,7 +19,7 @@ def create_parser() -> argparse.ArgumentParser:
         prog="terminal-gif-recorder",
         description="Automated terminal GIF recording utility",
     )
-    parser.add_argument("input", help="Input scenario file path (.json)")
+    parser.add_argument("input", nargs="?", help="Input scenario file path (.json)")
     parser.add_argument(
         "-o",
         "--output",
@@ -58,6 +58,10 @@ def main() -> None:
         scenario = Scenario.from_file(args.play_scenario)
         play_scenario(scenario)
         return
+
+    if not args.input:
+        parser.print_help(file=sys.stderr)
+        sys.exit(1)
 
     scenario_path = Path(args.input)
     if not scenario_path.exists():
