@@ -5,6 +5,7 @@ venv/
 .venv/
 *.cast
 *.gif
+!docs/demo/*.gif
 dist/
 build/
 *.egg-info/
