@@ -31,7 +31,7 @@ classifiers = [
 dependencies = []
 
 [project.scripts]
-terminal-gif-recorder = "src.cli:main"
+terminal-gif-recorder = "src.scripts.record:main"
 
 [build-system]
 requires = ["setuptools>=61.0.0"]
