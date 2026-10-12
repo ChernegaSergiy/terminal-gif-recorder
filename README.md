@@ -2,8 +2,6 @@
 
 Python toolkit and wrapper for automated creation of high-quality demonstration GIF animations of terminal CLI utilities (for README.md, documentation, or presentations).
 
----
-
 ## Terminal Session Recording Challenges
 
 Typical artifacts occur when recording manually or with simple scripts using a terminal emulator:
@@ -13,8 +11,6 @@ Typical artifacts occur when recording manually or with simple scripts using a t
 3. **Git markers in prompt (`?1`, `!1`)**: If the `.cast` file is recorded directly into the project's working directory, zsh detects an untracked file during execution and displays git status markers.
 4. **Inconsistent terminal dimensions**: Without fixed PTY geometry and rendering settings, lines may wrap or have inconsistent scaling across different demos.
 
----
-
 ## How It Works and Solutions
 
 - **Clean termination via SIGHUP**: The session is stopped by sending a `SIGHUP` signal to the shell process after waiting for a configured pause. The `exit` command is never typed and never appears in the recording.
@@ -22,8 +18,6 @@ Typical artifacts occur when recording manually or with simple scripts using a t
 - **Recording to a temporary directory (`/tmp`)**: The intermediate `.cast` file is written outside the repository, keeping the Git working tree clean throughout the entire session. The temporary file is cleaned up after GIF rendering.
 - **Fixed geometry (`cols` and `rows`)**: The PTY emulator sets the exact window size using `termios.TIOCSWINSZ`, and `agg` compiles the GIF with corresponding dimensions (default: 80x20, theme: `github-dark`).
 - **Typing emulation**: The `type()` method simulates human keystrokes with randomized delays between characters.
-
----
 
 ## Requirements
 
@@ -37,8 +31,6 @@ Typical artifacts occur when recording manually or with simple scripts using a t
   agg --version
   ```
   The utility automatically checks `PATH` as well as `~/.local/bin/agg`.
-
----
 
 ## Usage
 
@@ -81,8 +73,6 @@ recorder.save_gif("docs/demo/menu.gif")
 - `sleep(seconds)` — wait for a specified duration.
 - `save_gif(output_path)` — run the recording session and save the resulting GIF.
 
----
-
 ### 2. Running via CLI and JSON
 
 A scenario can be defined in JSON format:
@@ -119,8 +109,6 @@ CLI options:
 - `--rows` — terminal row height (default: 20).
 - `--theme` — agg color theme (default: github-dark).
 - `--cwd` — working directory for the session.
-
----
 
 ## Directory Structure
 
