@@ -1,0 +1,22 @@
+{
+  "cols": 80,
+  "rows": 20,
+  "theme": "github-dark",
+  "initial_pause": 1.2,
+  "final_pause": 1.8,
+  "actions": [
+    {
+      "type": "type",
+      "value": "echo 'Hello from Terminal GIF Recorder!'",
+      "delay": [0.04, 0.08]
+    },
+    {
+      "type": "key",
+      "value": "\r"
+    },
+    {
+      "type": "sleep",
+      "value": 1.5
+    }
+  ]
+}
