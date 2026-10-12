@@ -12,7 +12,7 @@ from recorder import TerminalRecorder
 
 
 def main():
-    workdir = Path.home() / "Development/General/Мої проєкти/terminal-ui"
+    workdir = Path.home() / "terminal-ui"
     output_gif = workdir / "docs/demo/wizard.gif"
 
     recorder = TerminalRecorder(
