@@ -1,50 +1,50 @@
 # Terminal GIF Recorder
 
-Інструментарій та обгортка на Python для автоматизованого створення якісних демонстраційних GIF-анімацій термінальних CLI-утиліт (для додавання в README.md, документацію або презентації).
+Python toolkit and wrapper for automated creation of high-quality demonstration GIF animations of terminal CLI utilities (for README.md, documentation, or presentations).
 
 ---
 
-## Проблематика запису термінальних сесій
+## Terminal Session Recording Challenges
 
-При ручному або простому скриптовому записі через емулятор терміналу виникають типові артефакти:
+Typical artifacts occur when recording manually or with simple scripts using a terminal emulator:
 
-1. **Зайва команда exit у фіналі**: щоб зупинити запис сесії asciinema, у термінал часто надсилається команда `exit`, яка друкується на екрані та потрапляє в останні кадри анімації.
-2. **Службовий символ % у zsh**: якщо попередній вивід не закінчується символом нового рядка, zsh виводить інвертований або закреслений знак `%` на початку рядка перед промптом.
-3. **Маркери Git у prompt (?1, !1)**: якщо записувати файл `.cast` безпосередньо у робочу директорію проєкту, zsh фіксує невідстежуваний файл під час виконання та відображає індикатор змін.
-4. **Неузгоджені розміри терміналу**: без фіксації геометрії PTY та налаштувань рендерингу рядки можуть обрізатися або мати різний масштаб у різних демонстраціях.
-
----
-
-## Принцип роботи та рішення
-
-- **Завершення через SIGHUP**: сесія зупиняється надсиланням сигналу `SIGHUP` процесу оболонки після витримки паузи. Команда `exit` не набирається і не з'являється у записі.
-- **Ізольована конфігурація ZDOTDIR**: скрипт створює тимчасовий `.zshrc`, який завантажує стандартний `~/.zshrc` користувача для збереження теми оформлення (наприклад, Powerlevel10k), але вимикає `PROMPT_EOL_MARK`, `PROMPT_SP`, `PROMPT_CR` та `POWERLEVEL9K_INSTANT_PROMPT`.
-- **Запис у тимчасову директорію (/tmp)**: проміжний файл `.cast` записується поза репозиторієм, завдяки чому робоче дерево Git залишається чистим під час усієї сесії. Після рендерингу в GIF тимчасовий файл видаляється.
-- **Фіксована геометрія (cols та rows)**: PTY емулятор задає точний розмір вікна через `termios.TIOCSWINSZ`, а `agg` компілює GIF із відповідними розмірами (за замовчуванням 80x20, тема `github-dark`).
-- **Емуляція введення**: функція `type()` симулює набір тексту з випадковою затримкою між натисканнями клавіш.
+1. **Unwanted `exit` command at the end**: To stop an asciinema session, an `exit` command is often sent to the terminal, which is printed on the screen and captured in the final frames of the animation.
+2. **Special `%` symbol in zsh**: If the previous output does not end with a newline character, zsh prints an inverted or crossed-out `%` symbol at the beginning of the line before the prompt.
+3. **Git markers in prompt (`?1`, `!1`)**: If the `.cast` file is recorded directly into the project's working directory, zsh detects an untracked file during execution and displays git status markers.
+4. **Inconsistent terminal dimensions**: Without fixed PTY geometry and rendering settings, lines may wrap or have inconsistent scaling across different demos.
 
 ---
 
-## Системні вимоги
+## How It Works and Solutions
+
+- **Clean termination via SIGHUP**: The session is stopped by sending a `SIGHUP` signal to the shell process after waiting for a configured pause. The `exit` command is never typed and never appears in the recording.
+- **Isolated ZDOTDIR configuration**: The script generates a temporary `.zshrc` that sources the user's standard `~/.zshrc` to preserve styling and themes (e.g., Powerlevel10k), while disabling `PROMPT_EOL_MARK`, `PROMPT_SP`, `PROMPT_CR`, and `POWERLEVEL9K_INSTANT_PROMPT`.
+- **Recording to a temporary directory (`/tmp`)**: The intermediate `.cast` file is written outside the repository, keeping the Git working tree clean throughout the entire session. The temporary file is cleaned up after GIF rendering.
+- **Fixed geometry (`cols` and `rows`)**: The PTY emulator sets the exact window size using `termios.TIOCSWINSZ`, and `agg` compiles the GIF with corresponding dimensions (default: 80x20, theme: `github-dark`).
+- **Typing emulation**: The `type()` method simulates human keystrokes with randomized delays between characters.
+
+---
+
+## Requirements
 
 - **Python 3.8+**
-- **asciinema** (запис термінальної сесії у формат asciicast):
+- **asciinema** (records terminal session into asciicast format):
   ```bash
   asciinema --version
   ```
-- **agg** (компіляція asciicast у GIF):
+- **agg** (compiles asciicast to GIF):
   ```bash
   agg --version
   ```
-  Утиліта автоматично перевіряє `PATH`, а також локальну директорію `~/.local/bin/agg`.
+  The utility automatically checks `PATH` as well as `~/.local/bin/agg`.
 
 ---
 
-## Використання
+## Usage
 
 ### 1. Python API
 
-Створення сценарію через ланцюжок викликів:
+Define a scenario via method chaining:
 
 ```python
 from pathlib import Path
@@ -59,33 +59,33 @@ recorder = TerminalRecorder(
     final_pause=1.8,
 )
 
-# Запуск команди
+# Run command
 recorder.type("php examples/interactive-menu.php").enter(pause_after=0.8)
 
-# Навігація
+# Navigation
 recorder.down(pause_after=0.3)
 recorder.down(pause_after=0.3)
 recorder.enter(pause_after=1.5)
 
-# Збереження GIF
+# Save GIF
 recorder.save_gif("docs/demo/menu.gif")
 ```
 
-#### Методи TerminalRecorder:
+#### TerminalRecorder Methods:
 
-- `type(text, char_delay_min=0.045, char_delay_max=0.085)` — набір тексту з інтервалами між символами.
-- `enter(pause_after=0.4)` — натискання Enter (`\r`).
-- `space(pause_after=0.2)` — натискання Space (` `).
-- `up(pause_after=0.2)`, `down()`, `left()`, `right()` — клавіші навігації.
-- `key(key_name_or_bytes)` — спеціальні клавіші (`ctrl+c`, `esc`, `tab`, `backspace` тощо).
-- `sleep(seconds)` — витримка паузи.
-- `save_gif(output_path)` — запуск запису та збереження результуючого GIF.
+- `type(text, char_delay_min=0.045, char_delay_max=0.085)` — type text with realistic inter-keystroke intervals.
+- `enter(pause_after=0.4)` — press Enter (`\r`).
+- `space(pause_after=0.2)` — press Space (` `).
+- `up(pause_after=0.2)`, `down()`, `left()`, `right()` — navigation arrow keys.
+- `key(key_name_or_bytes)` — special keys (`ctrl+c`, `esc`, `tab`, `backspace`, etc.).
+- `sleep(seconds)` — wait for a specified duration.
+- `save_gif(output_path)` — run the recording session and save the resulting GIF.
 
 ---
 
-### 2. Запуск через CLI та JSON
+### 2. Running via CLI and JSON
 
-Сценарій може бути збережений у форматі JSON:
+A scenario can be defined in JSON format:
 
 `scenario.json`:
 ```json
@@ -108,30 +108,30 @@ recorder.save_gif("docs/demo/menu.gif")
 }
 ```
 
-Команда запуску:
+CLI execution:
 ```bash
 ./recorder.py scenario.json -o docs/demo/table_demo.gif
 ```
 
-Опції CLI:
-- `-o`, `--output` — шлях до вихідного GIF-файлу.
-- `--cols` — кількість колонок терміналу (за замовчуванням: 80).
-- `--rows` — кількість рядків терміналу (за замовчуванням: 20).
-- `--theme` — тема оформления agg (за замовчуванням: github-dark).
-- `--cwd` — робоча директорія сесії.
+CLI options:
+- `-o`, `--output` — output GIF file path.
+- `--cols` — terminal column width (default: 80).
+- `--rows` — terminal row height (default: 20).
+- `--theme` — agg color theme (default: github-dark).
+- `--cwd` — working directory for the session.
 
 ---
 
-## Структура директорії
+## Directory Structure
 
 ```text
 terminal-gif-recorder/
-├── README.md                          # Документація
-├── recorder.py                        # Бібліотека та CLI утиліта
+├── README.md                          # Documentation
+├── recorder.py                        # Core library and CLI utility
 └── examples/
-    ├── terminal_ui_wizard.py          # Сценарій wizard.gif для terminal-ui
-    ├── terminal_ui_login.py           # Сценарій login.gif для terminal-ui
-    ├── terminal_ui_menu.py            # Сценарій menu.gif для terminal-ui
-    ├── table_magic_demo.py            # Сценарій інтерактивного режиму для table-magic
-    └── scenario_sample.json           # Приклад JSON-конфігурації
+    ├── terminal_ui_wizard.py          # wizard.gif scenario for terminal-ui
+    ├── terminal_ui_login.py           # login.gif scenario for terminal-ui
+    ├── terminal_ui_menu.py            # menu.gif scenario for terminal-ui
+    ├── table_magic_demo.py            # Interactive mode scenario for table-magic
+    └── scenario_sample.json           # Sample JSON configuration
 ```
