@@ -123,3 +123,7 @@ terminal-gif-recorder/
     +-- table_magic_demo.py    # Interactive mode scenario for table-magic
     \-- scenario_sample.json   # Sample JSON configuration
 ```
+
+## License
+
+This project is licensed under the CSSM Unlimited License v2.0 (CSSM-ULv2). See the [LICENSE](LICENSE) file for details.
