@@ -1,0 +1,3 @@
+"""
+CLI executable scripts package.
+"""
