@@ -8,13 +8,15 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-# Ensure repository root is on sys.path for direct script execution
+# Ensure repository root and src directory are on sys.path for direct script execution
 root_dir = Path(__file__).resolve().parent
-if str(root_dir) not in sys.path:
-    sys.path.insert(0, str(root_dir))
+src_dir = root_dir / "src"
+for p in (str(root_dir), str(src_dir)):
+    if p not in sys.path:
+        sys.path.insert(0, p)
 
-from src import Action, KEY_MAP, Scenario, TerminalRecorder, compile_gif, play_scenario
-from src.scripts.record import main
+from terminal_gif_recorder import Action, KEY_MAP, Scenario, TerminalRecorder, compile_gif, play_scenario
+from terminal_gif_recorder.scripts.record import main
 
 __all__ = [
     "Action",

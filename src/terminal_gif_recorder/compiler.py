@@ -48,7 +48,7 @@ def compile_gif(
     try:
         # Internal runner command executed within asciinema pseudo-terminal
         runner_cmd = (
-            f"{shlex.quote(sys.executable)} -m src.scripts.record --play-scenario {shlex.quote(scenario_file)}"
+            f"{shlex.quote(sys.executable)} -m terminal_gif_recorder.scripts.record --play-scenario {shlex.quote(scenario_file)}"
         )
         rec_cmd = (
             f"{shlex.quote(asciinema_bin)} rec {shlex.quote(str(cast_file))} "
