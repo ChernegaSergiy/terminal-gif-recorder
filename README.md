@@ -1,5 +1,8 @@
 # Terminal GIF Recorder
 
+[![License: CSSM Unlimited License v2.0](https://img.shields.io/pypi/l/terminal-gif-recorder)](LICENSE)
+[![Python Version](https://img.shields.io/pypi/pyversions/terminal-gif-recorder)](https://pypi.org/project/terminal-gif-recorder/)
+
 Python toolkit and wrapper for automated creation of high-quality demonstration GIF animations of terminal CLI utilities (for README.md, documentation, or presentations).
 
 ![Terminal GIF Recorder Demo](docs/demo/recorder.gif)
